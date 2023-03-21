@@ -2,7 +2,7 @@
   <TopBar v-if="isShowTopbar" />
   <div class="main-container container d-flex flex-row">
     <SideBar v-if="isShowSidebar"/>
-    <div class="container main-info">
+    <div class="container m-0 p-0 main-info">
       <RouterView />
     </div>
   </div>

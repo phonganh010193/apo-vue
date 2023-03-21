@@ -6637,6 +6637,11 @@
     "@vue/compiler-sfc" "2.7.14"
     "csstype" "^3.1.0"
 
+"vue3-carousel@^0.2.13":
+  "integrity" "sha512-h0y+0+PxRbcWlKHpCQFvIF+UMkQkt6Hk1lypNl/4HiOCu601hZ8vEf2AQUB3G5AD0lMxa9rm17riGpNd7glGbw=="
+  "resolved" "https://registry.npmjs.org/vue3-carousel/-/vue3-carousel-0.2.13.tgz"
+  "version" "0.2.13"
+
 "vuefire@^3.1.0":
   "integrity" "sha512-iLY6GARr5la75tfxBZUm2zfbL6kQ11FWBUHClyfM602xgWskkBAIareGs3R4K2DC4QSWXslrYnteCyLlqouD8w=="
   "resolved" "https://registry.npmjs.org/vuefire/-/vuefire-3.1.0.tgz"
