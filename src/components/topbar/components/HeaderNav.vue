@@ -5,7 +5,7 @@
                 <ul class="d-flex flex-row align-items-center">
                     <li><RouterLink to="/">Trang chủ</RouterLink></li>
                     <li>Giới thiệu</li>
-                    <li>Sản phẩm</li>
+                    <li><RouterLink :to="{ name: 'perfume', params: { id: 100 }}">Sản Phẩm</RouterLink></li>
                     <li>Liên hệ</li>
                     <li>Dịch vụ mới</li>
                 </ul>

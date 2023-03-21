@@ -2,16 +2,18 @@
     <div class="container home-container d-flex flex-row m-0 p-0">
       <div class="home-content">
         <p>Trang chủ</p>
+        
       </div>
     </div>
 </template>
 <script>
   export default {
     components: {
+      
     },
     data() {
       return {
-       
+        
       }
     },
     methods: {

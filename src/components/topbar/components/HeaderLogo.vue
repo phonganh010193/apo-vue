@@ -18,7 +18,7 @@
                 </div>
                 <div className="info-cart">
                     <p><RouterLink to="/cart">Giỏ hàng</RouterLink></p>
-                    <p><span>2</span> sản phẩm</p>
+                    <p><span style="color: red;">(2)</span> sản phẩm</p>
                 </div>
             </div>
         </div>
@@ -63,6 +63,11 @@ export default {
     .info-cart p {
         margin: 0;
         padding-left: 10px;
+    }
+
+    .info-cart p a{
+        color: #2d8356;
+        text-decoration: none;
     }
 
     .info-cart:hover {

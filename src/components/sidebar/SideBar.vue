@@ -7,7 +7,7 @@
             <h5>Danh Mục Sản Phẩm</h5>
         </div>
         <div className="sidebar-content">
-            <router-link v-for="(item ) in category" :key="item.id" :to="{ name: 'perfume', params: { id: item.id }}">{{ item.categoryName }}</router-link>
+            <router-link v-for="(item) in category" :key="item.id" :to="{ name: 'perfume', params: { id: item.id }}">{{ item.categoryName }}</router-link>
         </div>
     </div>
 </template>
@@ -15,6 +15,7 @@
 import { get, ref, } from 'firebase/database';
 import { database } from "../../firebase";
 export default {
+    
     data() {
         return {
             category: null
@@ -24,7 +25,6 @@ export default {
     mounted() {
         get(ref(database, 'Category')).then((snapshot) => {
         if (snapshot.exists()) {
-            console.log(Object.values(snapshot.val()))
             this.category = Object.values(snapshot.val());
         }})
         .catch((error) => {

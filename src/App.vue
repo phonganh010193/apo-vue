@@ -1,24 +1,27 @@
 <template>
   <TopBar v-if="isShowTopbar" />
   <div class="main-container container d-flex flex-row">
-      <SideBar v-if="isShowSidebar"/>
-      <div class="container main-info">
-        <RouterView />
-      </div>
+    <SideBar v-if="isShowSidebar"/>
+    <div class="container main-info">
+      <RouterView />
+    </div>
   </div>
+  <Footer />
 </template>
 <script>
 import TopBar from './components/topbar/TopBar.vue';
 import SideBar from './components/sidebar/SideBar.vue';
+import Footer from './components/footer/FooTer.vue';
 export default {
   components: {
       TopBar,
-      SideBar
+      SideBar,
+      Footer
   },
   data() {
     return {
       isShowSidebar: false,
-      isShowTopbar: false
+      isShowTopbar: false,
     }
   },
   watch: {
@@ -35,7 +38,10 @@ export default {
         this.isShowSidebar = false;
       }
     }
-  }
+  },
+  
+
+  
   
   
 }
@@ -46,6 +52,9 @@ export default {
   }
   
   .main-container {
-    margin-top: 30px
+    margin-top: 30px;
+    margin-bottom: 50px;
   }
+
+  
 </style>

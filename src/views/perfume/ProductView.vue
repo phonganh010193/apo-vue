@@ -1,58 +1,38 @@
 <template>
     <div class="container perfume-container d-flex flex-row p-0">
         <div class="product-list d-flex flex-column">
-            <p class="product-header">Trang chủ/ <span style="color: #2d8356">Nước hoa nam</span></p>
-            <h4 class="product-header-title">NƯỚC HOA NAM</h4>
-            <div class="product-info" >
-                <div class="product-item" v-for="item in product" :key="item.id">
+            <p class="product-header">Trang chủ/ <span style="color: #2d8356">{{ categoryId !== "100" ? categoryName : "Sản phẩm" }}</span></p>
+            <h4 class="product-header-title">{{ categoryId !== "100" ? categoryName : "TẤT CẢ SẢN PHẨM" }}</h4>
+            <div class="loadding-product" v-show="isLoading">Loading...</div>
+            <div class="product-info" v-show="!isLoading">
+                <div class="product-item" v-for="item in productList" :key="item.id">
                     <div class="product-item-content">
-                        <img src={{ item.image }} className="product-image" alt="" />
-                        <div className="btn-children">
-                            <div className="btn-content">
+                        <img :src="item.image" class="product-image" alt=""/>
+                        <div class="btn-children">
+                            <div class="btn-content">
                                 <button>Mua sản phẩm</button>
                                 <button>Xem chi tiết</button>
                             </div>
                         </div>
-                    </div>
-                    <p class="product-name">{{ item.productName }}</p>
-                    <div className="price">
-                        <p>{{ item.price }} VND</p>
-                        <p>{{ item.sale_price }} VND</p>
-                    </div>
-                </div>
-                <div class="product-item">
-                    <div class="product-item-content">
-                        <img src="https://bizweb.dktcdn.net/thumb/grande/100/110/910/products/8727377c-b4b9-4255-9c30-7d6f9c8098c2.webp?v=1670495875373" className="product-image" alt="" />
-                        <div className="btn-children">
-                            <div className="btn-content">
-                                <button>Mua sản phẩm</button>
-                                <button>Xem chi tiết</button>
-                            </div>
+                        <p class="product-name">{{ item.productName }}</p>
+                        <div class="price">
+                            <p>{{ item.price }} VND</p>
+                            <p>{{ item.sale_price }} VND</p>
                         </div>
                     </div>
-                    <p class="product-name">Penhaligon's Arthur (Unisex)</p>
-                    <div className="price">
-                        <p>5 900 000 VND</p>
-                        <p>8 000 000 VND</p>
-                    </div>
-                </div>
-                <div class="product-item">
-                    <div class="product-item-content">
-                        <img src="https://bizweb.dktcdn.net/thumb/grande/100/110/910/products/8727377c-b4b9-4255-9c30-7d6f9c8098c2.webp?v=1670495875373" className="product-image" alt="" />
-                        <div className="btn-children">
-                            <div className="btn-content">
-                                <button>Mua sản phẩm</button>
-                                <button>Xem chi tiết</button>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="product-name">Penhaligon's Arthur (Unisex)</p>
-                    <div className="price">
-                        <p>5 900 000 VND</p>
-                        <p>8 000 000 VND</p>
-                    </div>
+                    
                 </div>
             </div>
+            <ul class="product-pagination d-flex flex-row">
+                <li class="page-item"><Link class="page-link" to="#" @click="changePageNumber(page > 0 ? page - 1 : page)" >Trước</Link></li>
+                <li :class="index === page ? 'page-item-active' : 'page-item-children'" v-for="(item, index) in numberPage" :key="index" @click="changePageNumber(index)" >
+                    <span 
+                        class="page-link"
+                    >{{ index + 1 }}
+                    </span>
+                </li>
+                <li class="page-item"><Link class="page-link" to="#" @click="changePageNumber(page < numberPage - 1 ? page + 1 : page)" >Sau</Link></li>
+            </ul>
         </div>
     </div>
 </template>
@@ -65,48 +45,46 @@
         data() {
             return {
                 product: null,
+                isLoading: false,
                 categoryId: "",
                 productShow: null,
-                // list: null
+                productList: null,
+                categoryName: "",
+                take:12,
+                page:0,
+                numberPage:null,
             }
+        },
+        computed: {
+            
         },
 
         watch: {
             '$route' () {
                 this.categoryId = this.$route.params.id
-                console.log(this.categoryId);
-                // this.getProductList
-            }
+                this.fetchCategoryById();
+                this.fetchDataByCategoryId();
+                this.page = 0;
+                window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+            },
+            page:function() {
+                this.fetchDataByCategoryId()
+                window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+            },
         },  
-        created() {
+        
+        async mounted() {
             this.categoryId = this.$route.params.id
-            console.log(this.categoryId);  
-            this.fetchProduct();
-                // this.getProductList
-        } ,
-        // mounted() {
-        //     get(ref(database, "Product"))
-        //     .then((snapshot) => {
-        //     if (snapshot.exists()) {
-        //         const response = snapshot.val();
-        //         const keys = Object.keys(response);
-        //         const list = keys.map(key => {
-        //             return {
-        //                 ...response[key],
-        //                 key,
-        //             }
-        //         });
-        //         console.log('list', list); 
-        //         this.productList = list;
-        //     }
-        //     }).catch((error) => {
-        //     console.error(error);
-        //     });
-            
-        // },
+            this.page = 0;
+            await this.fetchProductById()
+            await this.fetchCategoryById()
+            await this.fetchDataByCategoryId()
+        },
+        
 
         methods: {
-            async fetchProduct() {
+            async fetchProductById() {
+                this.isLoading = true
                 await get(ref(database, "Product"))
                 .then((snapshot) => {
                 if (snapshot.exists()) {
@@ -118,63 +96,122 @@
                             key,
                         }
                     });
-                    console.log('list', list); 
-                    this.product = list;
+                    this.isLoading=false;
+                    this.product=list;
                 }
                 }).catch((error) => {
-                console.error(error);
+                    this.isLoading=false
+                    console.error(error);
                 });
+            },
+            fetchCategoryById() {
+                get(ref(database, 'Category')).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const category = Object.values(snapshot.val());
+                    if(category) {
+                        category.forEach(el => {
+                            if(el.id === this.categoryId) {
+                                this.categoryName = el.categoryName
+                            }
+                        })
+                    }
+                }})
+                .catch((error) => {
+                    console.error(error);
+                });
+            },
+            fetchDataByCategoryId() {
+                if (this.categoryId === "1") {
+                    this.productShow = this.product?.filter(el => el.gender === "1");
+                    if(this.page === 0) {
+                        this.productList = this.productShow.slice(0, this.take);
+                        this.numberPage = Math.ceil(this.productShow.length / this.take);
+                    } else {
+                        this.productList = this.productShow.slice(this.page * this.take, this.page * this.take + this.take);
+                    }
+                } else if (this.categoryId === "2") {
+                    this.productShow = this.product?.filter(el => el.gender === "2");
+                    if(this.page === 0) {
+                        this.productList = this.productShow.slice(0, this.take);
+                        this.numberPage = Math.ceil(this.productShow.length / this.take);
+                    } else {
+                        this.productList = this.productShow.slice(this.page * this.take, this.page * this.take + this.take);
+                    }
+                } else if (this.categoryId === "3") {
+                    this.productShow = this.product?.filter(el => {
+                        if (Number(el.price.split(" ").join('')) > 3000000 && el.gender === "1") {
+                            return el;
+                        }
+                    });
+                    if(this.page === 0) {
+                        this.productList = this.productShow.slice(0, this.take);
+                        this.numberPage = Math.ceil(this.productShow.length / this.take);
+                    }  else {
+                        this.productList = this.productShow.slice(this.page * this.take, this.page * this.take + this.take);
+                    }
+                } else if (this.categoryId === "4") {
+                    this.productShow = this.product?.filter(el => {
+                        if (Number(el.price.split(" ").join('')) > 3000000 && el.gender === "2") {
+                            return el;
+                        }
+                    });
+                    if(this.page === 0) {
+                        this.productList = this.productShow.slice(0, this.take);
+                        this.numberPage = Math.ceil(this.productShow.length / this.take);
+                    } else {
+                        this.productList = this.productShow.slice(this.page * this.take, this.page * this.take + this.take);
+                    }
+                } else if (this.categoryId === "5") {
+                    this.productShow = this.product?.filter(el => {
+                        if (Number(el.price.split(" ").join('')) < 1000000 && el.gender === "1") {
+                            return el;
+                        }
+                    });
+                    if(this.page === 0) {
+                        this.productList = this.productShow.slice(0, this.take);
+                        this.numberPage = Math.ceil(this.productShow.length / this.take);
+                    } else {
+                        this.productList = this.productShow.slice(this.page * this.take, this.page * this.take + this.take);
+                    }
+                } else if (this.categoryId === "6") {
+                    this.productShow = this.product?.filter(el => {
+                        if (Number(el.price.split(" ").join('')) < 1000000 && el.gender === "2") {
+                            return el;
+                        }
+                    });
+                    if(this.page === 0) {
+                        this.productList = this.productShow.slice(0, this.take);
+                        this.numberPage = Math.ceil(this.productShow.length / this.take);
+                    } else {
+                        this.productList = this.productShow.slice(this.page * this.take, this.page * this.take + this.take);
+                    }
+                } else if (this.categoryId === "100") {
+                    this.productShow = this.product?.filter(el => {
+                        if (el.gender === "1" || el.gender === "2") {
+                            return el;
+                        }
+                    });
+                    if(this.page === 0) {
+                        this.productList = this.productShow.slice(0, this.take);
+                        this.numberPage = Math.ceil(this.productShow.length / this.take);
+                    } else {
+                        this.productList = this.productShow.slice(this.page * this.take, this.page * this.take + this.take);
+                    }
+                } else {
+                    this.productShow = this.product?.filter(el => el.categoryId === this.categoryId);
+                    if(this.page === 0) {
+                        this.productList = this.productShow.slice(0, this.take);
+                        this.numberPage = Math.ceil(this.productShow.length / this.take);
+                    } else {
+                        this.productList = this.productShow.slice(this.page * this.take, this.page * this.take + this.take);
+                    }
+                }
+            },
+            changePageNumber(pageNumber) {
+                this.page = pageNumber;
             }
-        }
-        // computed: {
-        //     getProductList() {
-        //         if (this.categoryId === "1") {
-        //             this.productShow = this.productList?.filter(el => el.gender === "1")
-        //             console.log(this.productShow)
-        //         } else if (this.categoryId === "2") {
-        //             this.productShow = this.productList?.filter(el => el.gender === "2");
-        //             console.log(this.productShow)
-        //         } else if (this.categoryId === "3") {
-        //             this.productShow = this.productList?.filter(el => {
-        //                 if (Number(el.price.split(" ").join('')) > 3000000 && el.gender === "1") {
-        //                     return el;
-        //                 }
-        //             })
-        //             console.log(this.productShow)
-        //         } else if (this.categoryId === "4") {
-        //             this.productShow = this.productList?.filter(el => {
-        //                 if (Number(el.price.split(" ").join('')) > 3000000 && el.gender === "2") {
-        //                     return el;
-        //                 }
-        //             })
-        //             console.log(this.productShow)
-        //         } else if (this.categoryId === "5") {
-        //             this.productShow = this.productList?.filter(el => {
-        //                 if (Number(el.price.split(" ").join('')) < 1000000 && el.gender === "1") {
-        //                     return el;
-        //                 }
-        //             })
-        //             console.log(this.productShow)
-        //         } else if (this.categoryId === "6") {
-        //             this.productShow = this.productList?.filter(el => {
-        //                 if (Number(el.price.split(" ").join('')) < 1000000 && el.gender === "2") {
-        //                     return el;
-        //                 }
-        //             })
-        //             console.log(this.productShow)
-        //         } else if (this.categoryId === "100") {
-        //             this.productShow = this.productList?.filter(el => {
-        //                 if (el.gender === "1" || el.gender === "2") {
-        //                     return el;
-        //                 }
-        //             })
-        //             console.log(this.productShow)
-        //         } else {
-        //             this.productShow = this.productList?.filter(el => el.categoryId === this.categoryId)
-        //             console.log(this.productShow)
-        //         }
-        //     }
-        // }
+        },
+       
 
 
 
@@ -200,8 +237,15 @@
         justify-content: space-between;
     }
 
+    .loadding-product {
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+        justify-content: space-between;
+    }
+
     .product-header-title {
         border-bottom: 1px solid gray;
+        text-transform: uppercase;
     }
 
     .product-item {
@@ -285,6 +329,7 @@
         text-transform: capitalize
     }
 
+
     .price p {
         text-align: center;
         color: #2d8356;
@@ -299,5 +344,72 @@
     .price p:last-child {
         text-decoration: line-through;
         color: gray !important;
+    }
+
+    .product-pagination {
+        height: 38px;
+        text-align: center;
+        line-height: 38px;
+        color: #2d8356;
+        margin-top: 70px;
+        justify-content: flex-end;
+        margin-right: 50px;
+    }
+
+    .page-item {
+        list-style: none;
+        height: 100%;
+    }
+    
+    .page-item:hover{
+        background-color: rgb(219, 236, 236);
+    }
+
+    .page-item-children:hover{
+        background-color: rgb(219, 236, 236);
+
+    }
+
+    .page-item-active {
+        list-style: none;
+        height: 100%;
+        border-right: 1px solid #dee2e6;
+        width: 38px;
+        border-bottom: 1px solid #dee2e6;
+        border-top: 1px solid #dee2e6;
+        background-color: rgb(219, 236, 236);
+    }
+
+    .page-item-children {
+        list-style: none;
+        height: 100%;
+        border-right: 1px solid #dee2e6;
+        width: 38px;
+        border-bottom: 1px solid #dee2e6;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .page-item-children:last-child {
+        border-right: none !important;
+    }
+
+    .page-item:first-child{
+        border-radius: 5px 0 0 5px;
+        border: 1px solid #dee2e6;
+        width: 50px;
+    }
+
+    .page-item:last-child{
+        border-radius: 0 5px 5px 0;
+        border: 1px solid #dee2e6;
+        width: 50px;
+    }
+
+    .product-active {
+        background-color: red !important;
+    }
+
+    .page-link-active {
+        background-color: rgb(219, 236, 236);
     }
 </style>

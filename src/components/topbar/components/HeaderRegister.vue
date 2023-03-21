@@ -3,7 +3,7 @@
         <div class="container header-container d-flex flex-row align-items-center justify-content-between">
         <div class="header-register d-flex flex-row align-items-center">
             <p><RouterLink to="/signin">Đăng nhập</RouterLink></p>
-            <p>Đăng Ký</p>
+            <p><RouterLink to="/signin">Đăng ký</RouterLink></p>
         </div>
         <div class="user-header d-flex flex-row align-items-center">
             <img src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8&w=1000&q=80" alt="" />
@@ -35,7 +35,12 @@ export default {
         text-align: center;
     }
 
-    .header-register p:hover {
+    .header-register p a {
+        color: black;
+        text-decoration: none;
+    }
+
+    .header-register p a:hover {
         cursor: pointer;
         color: green;
         font-size: 17px;
