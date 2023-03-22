@@ -1,8 +1,8 @@
 <template>
   <TopBar v-if="isShowTopbar" />
-  <div class="main-container container d-flex flex-row">
+  <div class="main-container container d-flex flex-row p-0">
     <SideBar v-if="isShowSidebar"/>
-    <div class="container m-0 p-0 main-info">
+    <div :class="isShowSidebar && isShowTopbar ?'main-info' : 'main-info-content'">
       <RouterView />
     </div>
   </div>
@@ -55,6 +55,10 @@ export default {
     width: 100%;
     margin-top: 30px;
     margin-bottom: 50px;
+  }
+
+  .main-info-content{
+    width: 100%;
   }
 
   

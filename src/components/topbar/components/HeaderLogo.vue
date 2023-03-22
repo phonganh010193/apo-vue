@@ -1,5 +1,5 @@
 <template>
-    <div class="logo-container container d-flex flex-row">
+    <div class="logo-container container d-flex flex-row p-0">
         <img src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8&w=1000&q=80" className="icon-logo" alt="" />
         <div className="header-logo-info d-flex flex-row justify-content-around align-items-center">
             <div className="transport d-flex flex-row align-items-center">

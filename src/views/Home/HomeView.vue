@@ -1,5 +1,5 @@
 <template>
-    <div class="container home-container d-flex flex-row m-0 p-0">
+    <div class="home-container d-flex flex-row">
       <div class="home-content">
         <HomeSlider />
         <HomeProduct :list="listMen" :loading="isLoadingMen" :gender="male" />
@@ -98,7 +98,7 @@ export default {
 </script>
 <style >
     .home-container {
-      width: 75% !important;
+      width: 100% !important;
     }
     .home-content {
       width: 100% !important;

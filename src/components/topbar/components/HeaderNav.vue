@@ -1,6 +1,6 @@
 <template >
     <div class="container-fluid nav-parent-container m-0 p-0 ">
-        <div class="nav-container container d-flex flex-row justify-content-between align-items-center">
+        <div class="nav-container container d-flex flex-row justify-content-between align-items-center p-0">
             <div class="nav-left">
                 <ul class="d-flex flex-row align-items-center">
                     <li><RouterLink to="/">Trang chủ</RouterLink></li>

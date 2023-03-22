@@ -1,6 +1,6 @@
 <template>
     <div class="register-container container-fluid m-0 p-0">
-        <div class="container header-container d-flex flex-row align-items-center justify-content-between">
+        <div class="container header-container d-flex flex-row align-items-center justify-content-between p-0">
         <div class="header-register d-flex flex-row align-items-center">
             <p><RouterLink to="/signin">Đăng nhập</RouterLink></p>
             <p><RouterLink to="/signin">Đăng ký</RouterLink></p>

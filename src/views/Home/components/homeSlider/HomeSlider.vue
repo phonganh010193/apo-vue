@@ -7,7 +7,7 @@
           :pause-autoplay-on-hover="true"
         >
         <slide class="list-image-show" v-for="item in images" :key="item.id">
-        <img class="image-home" :src="item.image" alt="" />
+          <img class="image-home" :src="item.image" alt="" />
         </slide>
         <template #addons>
             <navigation />

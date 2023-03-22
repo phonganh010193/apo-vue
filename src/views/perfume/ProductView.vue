@@ -1,5 +1,5 @@
 <template>
-    <div class="container perfume-container d-flex flex-row p-0">
+    <div class="perfume-container d-flex flex-row">
         <div class="product-list d-flex flex-column">
             <p class="product-header">Trang chủ/ <span style="color: #2d8356">{{ categoryId !== "100" ? categoryName : "Sản phẩm" }}</span></p>
             <h4 class="product-header-title">{{ categoryId !== "100" ? categoryName : "TẤT CẢ SẢN PHẨM" }}</h4>
