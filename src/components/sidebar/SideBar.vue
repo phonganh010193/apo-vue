@@ -9,34 +9,173 @@
         <div className="sidebar-content">
             <router-link v-for="(item) in category" :key="item.id" :to="{ name: 'perfume', params: { id: item.id }}">{{ item.categoryName }}</router-link>
         </div>
+        <SidebarContent v-if="isShowSidebarHome || isShowSidebarProduct" class="all-sidebar-content" :list="listbestsell" :checkshow="bestsellers" :isshowsidebar="isShowSidebarProduct"/>
+        <SidebarContent v-if="isShowSidebarHome" class="all-sidebar-content" :list="listnewadd" :checkshow="newadd" />
+        <SidebarContent v-if="isShowSidebarHome" class="all-sidebar-content" :list="listdiscount" :checkshow="discount" />
     </div>
 </template>
 <script>
 import { get, ref, } from 'firebase/database';
 import { database } from "../../firebase";
+import SidebarContent from './components/SidebarContent.vue';
 export default {
-    
+    components: {
+        SidebarContent,
+    }, 
     data() {
         return {
-            category: null
+            category: null,
+            listbestsell: [
+                {id:1, productShow: null},
+                {id:2, productShow: null},
+                {id:3, productShow: null},
+            ],
+            isLoadingBestSell: false,
+            listnewadd: [
+                {id:1, productShow: null},
+                {id:2, productShow: null},
+                {id:3, productShow: null},
+            ],
+            isLoadingNewwAdd: false,
+            listdiscount: [
+                {id:1, productShow: null},
+                {id:2, productShow: null},
+                {id:3, productShow: null},
+            ],
+            isLoadingDisCount: false,
+            bestsellers:"1",
+            newadd:"2",
+            discount:"3",
+            isShowSidebarHome: false,
+            isShowSidebarProduct: false
+        }
+    },
+    watch: {
+        '$route' () {
+            const url = window.location.href;
+            if (url.slice(21) === '/') {
+                this.isShowSidebarHome = true;
+                this.isShowSidebarProduct = false;
+            } else if (url.includes("/perfume/")) {
+                this.isShowSidebarProduct = true;
+                this.isShowSidebarHome = false;
+            
+            }
         }
     },
 
-    mounted() {
-        get(ref(database, 'Category')).then((snapshot) => {
-        if (snapshot.exists()) {
-            this.category = Object.values(snapshot.val());
-        }})
-        .catch((error) => {
-            console.error(error);
-        });
+    async mounted() {
+        await this.fetCategory();
+        await this.fetchProductBestSale();
+        await this.fetchProductDisCount();
+        await this.fetchProductNewAdd();
+        const url = window.location.href;
+        if (url.slice(21) === '/') {
+            this.isShowSidebarHome = true;
+        } else if (url.includes("/perfume/")) {
+            this.isShowSidebarProduct = true;
+            this.isShowSidebarHome = false;
+        
+        }
+    },
+
+    methods: {
+        fetCategory() {
+            get(ref(database, 'Category')).then((snapshot) => {
+            if (snapshot.exists()) {
+                this.category = Object.values(snapshot.val());
+            }})
+            .catch((error) => {
+                console.error(error);
+            });
+        },
+        fetchProductBestSale() {
+            this.isLoadingBestSell = true;
+            get(ref(database, "Product"))
+            .then((snapshot) => {
+            if (snapshot.exists()) {
+                const response = snapshot.val();
+                const keys = Object.keys(response);
+                const list = keys?.map(key => {
+                    return {
+                        ...response[key],
+                        key,
+                    }
+                })?.sort(function (a, b) {
+                return b.bestsellers - a.bestsellers;
+                });
+                this.isLoadingBestSell = false;
+                this.listbestsell[0].productShow= list?.slice(0,4);
+                this.listbestsell[1].productShow= list?.slice(4,8);
+                this.listbestsell[2].productShow= list?.slice(8,12);
+            }
+            }).catch((error) => {
+                this.isLoadingBestSell = false;
+                console.error(error);
+            });
+        },
+        fetchProductDisCount() {
+            this.isLoadingDisCount = true;
+            get(ref(database, "Product"))
+            .then((snapshot) => {
+            if (snapshot.exists()) {
+                const response = snapshot.val();
+                const keys = Object.keys(response);
+                const list = keys?.map(key => {
+                    return {
+                        ...response[key],
+                        key,
+                    }
+                })?.filter(el => {
+                    if (Number(el.price.split(" ").join('')) < 1000000) {
+                        return el
+                    }
+                });
+                this.isLoadingDisCount = false;
+                this.listdiscount[0].productShow= list?.slice(0,4);
+                this.listdiscount[1].productShow= list?.slice(4,8);
+                this.listdiscount[2].productShow= list?.slice(8,12);
+            }
+            }).catch((error) => {
+                this.isLoadingDisCount = false;
+                console.error(error);
+            });
+        },
+        fetchProductNewAdd() {
+            this.isLoadingNewwAdd = true;
+            get(ref(database, "Product"))
+            .then((snapshot) => {
+            if (snapshot.exists()) {
+                const response = snapshot.val();
+                const keys = Object.keys(response);
+                const list = keys?.map(key => {
+                    return {
+                        ...response[key],
+                        key,
+                    }
+                })?.sort(function (a, b) {
+                    return new Date(b.dateAdd).getTime() - new Date(a.dateAdd).getTime();
+                });
+                this.isLoadingNewwAdd = false;
+                this.listnewadd[0].productShow= list?.slice(0,4);
+                this.listnewadd[1].productShow= list?.slice(4,8);
+                this.listnewadd[2].productShow= list?.slice(8,12);
+            }
+            }).catch((error) => {
+                this.isLoadingNewwAdd = false;
+                console.error(error);
+            });
+        },
     },
     
 }
 </script>
 <style>
+    .all-sidebar-content {
+        width: 100%;
+    }
     .sidebar-container {
-        width: 30%;
+        width: 25%;
     }
     .sidebar-title {
         display: flex;

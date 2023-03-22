@@ -48,10 +48,11 @@ export default {
 </script>
 <style>
   .main-info {
-    width: 70%;
+    width: 75% !important;
   }
   
   .main-container {
+    width: 100%;
     margin-top: 30px;
     margin-bottom: 50px;
   }

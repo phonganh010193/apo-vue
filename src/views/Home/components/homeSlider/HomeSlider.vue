@@ -38,14 +38,14 @@ export default {
 </script>
 <style >
     .image-home {
-      width: 100%;
+      width: 100% !important;
       height: 800px;
     }
 
     .list-item-image {
-      width: 967px;
+      width: 100% !important;
     }
     .list-image-show {
-      width: 697px;
+      width: 100% !important;
     }
 </style>

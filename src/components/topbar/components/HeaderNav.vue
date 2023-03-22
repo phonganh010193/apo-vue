@@ -29,11 +29,12 @@ export default {
 <style>
     .nav-parent-container {
         background-color: black;
+        height: 60px;
     }
 
     .nav-container {
         width: 100%;
-        height: 50px;
+        height: 100%;
         background-color: black;
     }
 
@@ -54,8 +55,8 @@ export default {
 
     .nav-left ul li {
        width: 150px;
-       height: 50px;
-       line-height: 50px;
+       height: 60px;
+       line-height: 60px;
        list-style: none;
        color: white;
        font-size: 17px;

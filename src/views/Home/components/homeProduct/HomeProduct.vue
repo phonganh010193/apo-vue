@@ -2,37 +2,42 @@
 <template >
     <div class="home-product">
         <div class="home-product-content">
-            <p>Nước hoa nam</p>
+            <p>{{ gender === "1" ? "NƯỚC HOA NAM" : "NƯỚC HOA NỮ" }}</p>
         </div>
+        <p v-show="loading">Loading...</p>
         <carousel 
-          class="list-item-image" 
+          class="list-item-product" 
           :items-to-show="1" 
         >
-        <slide class="list-image-show" v-for="item in list" :key="item.id">
-            <div class="home-product-item d-flex flex-row">
-                <div class="product-item" v-for="el in item.productShow" :key="el.id">
-                    <div class="product-item-content"  >
-                        <img :src="el.image" class="product-image" alt=""/>
-                        <div class="btn-children">
-                            <div class="btn-content">
-                                <button>Mua sản phẩm</button>
-                                <button>Xem chi tiết</button>
+            <slide class="list-product-show" v-for="item in list" :key="item.id">
+                <div class="home-product-item d-flex flex-row" v-for="el in item.productShow" :key="el.id">
+                    <div class="product-item">
+                        <div class="product-item-content"  >
+                            <img :src="el.image" class="product-image" alt=""/>
+                            <div class="btn-children">
+                                <div class="btn-content">
+                                    <button>Mua sản phẩm</button>
+                                    <button>Xem chi tiết</button>
+                                </div>
                             </div>
-                        </div>
-                        <p class="product-name">{{ el.productName }}</p>
-                        <div class="price">
-                            <p>{{ el.price }} VND</p>
-                            <p>{{ el.sale_price }} VND</p>
+                            <p class="product-name">{{ el.productName }}</p>
+                            <div class="price">
+                                <p>{{ el.price }} VND</p>
+                                <p>{{ el.sale_price }} VND</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </slide>
-        <template #addons>
-            <navigation />
-        </template>
-    </carousel>
-        
+            </slide>
+            <template #addons >
+                <div class="btn-group-home d-flex flex-row m-0">
+                    <navigation  class="btn-product-home"/>
+                </div>
+            </template>
+        </carousel>
+        <div class="view-all-btn">
+            <button><router-link :to="{ name: 'perfume', params: { id: gender }}">Xem tất cả</router-link></button>
+        </div>
     </div>
 </template>
 <script>
@@ -40,7 +45,7 @@ import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Slide, Navigation } from 'vue3-carousel';
 
 export default {
-    props: ["product"],
+    props: ["list", "loading", "gender"],
     components: {
         Carousel,
         Slide,
@@ -48,29 +53,64 @@ export default {
     },
     data() {
         return {
-            list: [
-                {id:1, productShow: null},
-                {id:2, productShow: null},
-                {id:3, productShow: null},
-            ]
-              
+
         }
     },
-    async mounted() {
-        await this.getProduct();
-    },
+   
     methods: {
-        getProduct() {
-            if(this.product) {
-                this.list[0].productShow= this.product?.slice(0,4);
-                this.list[1].productShow= this.product?.slice(4,8);
-                this.list[2].productShow= this.product?.slice(8,12);
-            }
-        }
+        
     },
 }
 </script>
 <style >
+    .view-all-btn{
+        width: 100px;
+        margin: 0 auto;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    .view-all-btn > button {
+        width: 100px;
+        height: 40px;
+        border-radius: 5px;
+        background-color: #f1f1f1;
+        border: 1px solid #2d8356;
+    }
+
+    .view-all-btn > button:hover {
+        background-color: #69a084;
+    }
+
+    .btn-group-home {
+        position: absolute;
+        top: -15px;
+        right: 0;
+        color: #2d8356;
+    }
+    .btn-product-home {
+        position: relative;
+        margin: 0;
+    }
+
+    .home-product-content {
+        border-bottom: 3px solid #2d8356;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .home-product-content > p {
+        margin: 0;
+    }
+    .home-product {
+        width: 100%;
+        margin-top: 50px;
+    }
+
+    .list-item-product {
+        width: 100% !important;
+    }
+
     .home-product-item {
         justify-content: space-between;
     }
@@ -169,5 +209,10 @@ export default {
     .price p:last-child {
         text-decoration: line-through;
         color: gray !important;
+    }
+
+    .list-product-show {
+        justify-content: space-around !important;
+        width: 100%;
     }
 </style>
