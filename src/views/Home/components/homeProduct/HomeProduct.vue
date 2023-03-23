@@ -51,15 +51,6 @@ export default {
         Slide,
         Navigation,
     },
-    data() {
-        return {
-
-        }
-    },
-   
-    methods: {
-        
-    },
 }
 </script>
 <style >

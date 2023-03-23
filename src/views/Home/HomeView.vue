@@ -21,23 +21,6 @@ export default {
     HomeSlider,
     HomeImage
   },
-  data() {
-    return {
-      // isLoadingMen: false,
-      // listMen: [
-      //   {id:1, productShow: null},
-      //   {id:2, productShow: null},
-      //   {id:3, productShow: null},
-      // ],
-      // listWomen: [
-      //   {id:1, productShow: null},
-      //   {id:2, productShow: null},
-      //   {id:3, productShow: null},
-      // ],
-      // isLoadingWomen: false,
-      
-    }
-  },
   computed: mapGetters([ 'male', 'female', 'listMen', 'listWomen', 'isLoadingMen', 'isLoadingWomen' ]),
 
   async mounted() {
@@ -54,20 +37,12 @@ export default {
 }
 </script>
 <style >
-    .home-container {
-      width: 100% !important;
-    }
-    .home-content {
-      width: 100% !important;
-      margin-left: 30px;
-      overflow: hidden;
-
-    }
-
-    /* .home-content p {
-      border-bottom: 1px solid gray;
-      font-size: 20px;
-    } */
-
-   
+  .home-container {
+    width: 100% !important;
+  }
+  .home-content {
+    width: 100% !important;
+    margin-left: 30px;
+    overflow: hidden;
+  }
 </style>

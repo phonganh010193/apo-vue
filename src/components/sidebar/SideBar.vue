@@ -15,41 +15,25 @@
     </div>
 </template>
 <script>
-import { get, ref, } from 'firebase/database';
 import { mapActions, mapGetters  } from 'vuex';
-import { database } from "../../firebase";
 import SidebarContent from './components/SidebarContent.vue';
 export default {
     components: {
         SidebarContent,
     }, 
-    data() {
-        return {
-            category: null,
-            listbestsell: [
-                {id:1, productShow: null},
-                {id:2, productShow: null},
-                {id:3, productShow: null},
-            ],
-            isLoadingBestSell: false,
-            listnewadd: [
-                {id:1, productShow: null},
-                {id:2, productShow: null},
-                {id:3, productShow: null},
-            ],
-            isLoadingNewwAdd: false,
-            listdiscount: [
-                {id:1, productShow: null},
-                {id:2, productShow: null},
-                {id:3, productShow: null},
-            ],
-            isLoadingDisCount: false,
-            // bestsellers:"1",
-            // newadd:"2",
-            // discount:"3",
-        }
-    },
-    computed: {...mapGetters(['isShowSidebarHome', 'isShowSidebarProduct', 'bestsellers', 'newadd', 'discount']),
+    
+    computed: {
+        ...mapGetters([
+            'isShowSidebarHome', 
+            'isShowSidebarProduct', 
+            'bestsellers', 
+            'newadd', 
+            'discount', 
+            'category', 
+            'listbestsell',
+            'listnewadd',
+            'listdiscount'
+        ]),
     },
     watch: {
         '$route' () {
@@ -66,10 +50,10 @@ export default {
     },
 
     async created() {
-        await this.fetCategory();
-        await this.fetchProductBestSale();
-        await this.fetchProductDisCount();
-        await this.fetchProductNewAdd();
+        await this.getCategory();
+        await this.getProductBestSell();
+        await this.getProductDisCount();
+        await this.getProductNewAdd();
         const url = window.location.href;
         if (url.slice(21) === '/') {
             this.homeTrue()
@@ -82,94 +66,7 @@ export default {
     },
 
     methods: {
-        fetCategory() {
-            get(ref(database, 'Category')).then((snapshot) => {
-            if (snapshot.exists()) {
-                this.category = Object.values(snapshot.val());
-            }})
-            .catch((error) => {
-                console.error(error);
-            });
-        },
-        fetchProductBestSale() {
-            this.isLoadingBestSell = true;
-            get(ref(database, "Product"))
-            .then((snapshot) => {
-            if (snapshot.exists()) {
-                const response = snapshot.val();
-                const keys = Object.keys(response);
-                const list = keys?.map(key => {
-                    return {
-                        ...response[key],
-                        key,
-                    }
-                })?.sort(function (a, b) {
-                return b.bestsellers - a.bestsellers;
-                });
-                this.isLoadingBestSell = false;
-                this.listbestsell[0].productShow= list?.slice(0,4);
-                this.listbestsell[1].productShow= list?.slice(4,8);
-                this.listbestsell[2].productShow= list?.slice(8,12);
-            }
-            }).catch((error) => {
-                this.isLoadingBestSell = false;
-                console.error(error);
-            });
-        },
-        fetchProductDisCount() {
-            this.isLoadingDisCount = true;
-            get(ref(database, "Product"))
-            .then((snapshot) => {
-            if (snapshot.exists()) {
-                const response = snapshot.val();
-                const keys = Object.keys(response);
-                const list = keys?.map(key => {
-                    return {
-                        ...response[key],
-                        key,
-                    }
-                })?.filter(el => {
-                    if (Number(el.price.split(" ").join('')) < 1000000) {
-                        return el
-                    }
-                });
-                this.isLoadingDisCount = false;
-                this.listdiscount[0].productShow= list?.slice(0,4);
-                this.listdiscount[1].productShow= list?.slice(4,8);
-                this.listdiscount[2].productShow= list?.slice(8,12);
-            }
-            }).catch((error) => {
-                this.isLoadingDisCount = false;
-                console.error(error);
-            });
-        },
-        fetchProductNewAdd() {
-            this.isLoadingNewwAdd = true;
-            get(ref(database, "Product"))
-            .then((snapshot) => {
-            if (snapshot.exists()) {
-                const response = snapshot.val();
-                const keys = Object.keys(response);
-                const list = keys?.map(key => {
-                    return {
-                        ...response[key],
-                        key,
-                    }
-                })?.sort(function (a, b) {
-                    return new Date(b.dateAdd).getTime() - new Date(a.dateAdd).getTime();
-                });
-                this.isLoadingNewwAdd = false;
-                this.listnewadd[0].productShow= list?.slice(0,4);
-                this.listnewadd[1].productShow= list?.slice(4,8);
-                this.listnewadd[2].productShow= list?.slice(8,12);
-            }
-            }).catch((error) => {
-                this.isLoadingNewwAdd = false;
-                console.error(error);
-            });
-        },
-        ...mapActions(['homeTrue', 'homeFalse', 'productTrue', 'productFalse'])
-
+        ...mapActions(['homeTrue', 'homeFalse', 'productTrue', 'productFalse', 'getCategory', 'getProductBestSell', 'getProductNewAdd', 'getProductDisCount'])
     },
     
 }
