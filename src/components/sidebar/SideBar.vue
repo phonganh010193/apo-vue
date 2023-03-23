@@ -7,7 +7,7 @@
             <h5>Danh Mục Sản Phẩm</h5>
         </div>
         <div className="sidebar-content">
-            <router-link v-for="(item) in category" :key="item.id" :to="{ name: 'perfume', params: { id: item.id }}">{{ item.categoryName }}</router-link>
+            <router-link v-for="(item) in category" :key="item.id" :to="{ name: 'perfume', params: { id: item.id }}">{{ item.categoryName }}</router-link> 
         </div>
         <SidebarContent v-if="isShowSidebarHome || isShowSidebarProduct" class="all-sidebar-content" :list="listbestsell" :checkshow="bestsellers" :isshowsidebar="isShowSidebarProduct"/>
         <SidebarContent v-if="isShowSidebarHome" class="all-sidebar-content" :list="listnewadd" :checkshow="newadd" />
@@ -16,6 +16,7 @@
 </template>
 <script>
 import { get, ref, } from 'firebase/database';
+import { mapActions, mapGetters  } from 'vuex';
 import { database } from "../../firebase";
 import SidebarContent from './components/SidebarContent.vue';
 export default {
@@ -43,39 +44,40 @@ export default {
                 {id:3, productShow: null},
             ],
             isLoadingDisCount: false,
-            bestsellers:"1",
-            newadd:"2",
-            discount:"3",
-            isShowSidebarHome: false,
-            isShowSidebarProduct: false
+            // bestsellers:"1",
+            // newadd:"2",
+            // discount:"3",
         }
+    },
+    computed: {...mapGetters(['isShowSidebarHome', 'isShowSidebarProduct', 'bestsellers', 'newadd', 'discount']),
     },
     watch: {
         '$route' () {
             const url = window.location.href;
             if (url.slice(21) === '/') {
-                this.isShowSidebarHome = true;
-                this.isShowSidebarProduct = false;
+                this.homeTrue()
+                this.productFalse()
             } else if (url.includes("/perfume/")) {
-                this.isShowSidebarProduct = true;
-                this.isShowSidebarHome = false;
+                this.productTrue()
+                this.homeFalse()
             
             }
         }
     },
 
-    async mounted() {
+    async created() {
         await this.fetCategory();
         await this.fetchProductBestSale();
         await this.fetchProductDisCount();
         await this.fetchProductNewAdd();
         const url = window.location.href;
         if (url.slice(21) === '/') {
-            this.isShowSidebarHome = true;
+            this.homeTrue()
+            this.productFalse()
         } else if (url.includes("/perfume/")) {
-            this.isShowSidebarProduct = true;
-            this.isShowSidebarHome = false;
-        
+            this.productTrue()
+            this.homeFalse()
+            
         }
     },
 
@@ -166,6 +168,8 @@ export default {
                 console.error(error);
             });
         },
+        ...mapActions(['homeTrue', 'homeFalse', 'productTrue', 'productFalse'])
+
     },
     
 }

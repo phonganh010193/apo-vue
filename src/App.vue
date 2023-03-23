@@ -24,6 +24,7 @@ export default {
       isShowTopbar: false,
     }
   },
+  
   watch: {
     '$route' () {
       const url = window.location.href;
@@ -39,6 +40,19 @@ export default {
       }
     }
   },
+  created() {
+    const url = window.location.href;
+    if (url.slice(21) === '/' || url.includes("/perfume/")) {
+      this.isShowTopbar = true;
+      this.isShowSidebar = true;
+    } else if (url.includes("/signin") || url.includes("/signup") || url.includes("/forgotpassword")) {
+      this.isShowSidebar = false;
+      this.isShowTopbar = false;
+    } else {
+      this.isShowTopbar = true;
+      this.isShowSidebar = false;
+    }
+  }
   
 
   
