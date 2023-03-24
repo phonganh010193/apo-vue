@@ -22,6 +22,10 @@ export default {
         width: 100%;
         border-bottom: 1px solid gray;
     }
+
+    .header-container {
+        width: 1280px !important;
+    }
     .header-register{
         height: 50px;
     } 

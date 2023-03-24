@@ -7,7 +7,7 @@
             <h5>Danh Mục Sản Phẩm</h5>
         </div>
         <div className="sidebar-content">
-            <router-link v-for="(item) in category" :key="item.id" :to="{ name: 'perfume', params: { id: item.id }}">{{ item.categoryName }}</router-link> 
+            <router-link v-for="(item) in category" :key="item.id" :to="{ name: 'product', params: { id: item.id }}">{{ item.categoryName }}</router-link> 
         </div>
         <SidebarContent v-if="isShowSidebarHome || isShowSidebarProduct" class="all-sidebar-content" :list="listbestsell" :checkshow="bestsellers" :isshowsidebar="isShowSidebarProduct"/>
         <SidebarContent v-if="isShowSidebarHome" class="all-sidebar-content" :list="listnewadd" :checkshow="newadd" />
@@ -41,7 +41,7 @@ export default {
             if (url.slice(21) === '/') {
                 this.homeTrue()
                 this.productFalse()
-            } else if (url.includes("/perfume/")) {
+            } else if (url.includes("/product/")) {
                 this.productTrue()
                 this.homeFalse()
             
@@ -58,7 +58,7 @@ export default {
         if (url.slice(21) === '/') {
             this.homeTrue()
             this.productFalse()
-        } else if (url.includes("/perfume/")) {
+        } else if (url.includes("/product/")) {
             this.productTrue()
             this.homeFalse()
             

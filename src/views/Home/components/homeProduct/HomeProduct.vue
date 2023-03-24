@@ -17,13 +17,13 @@
                             <div class="btn-children">
                                 <div class="btn-content">
                                     <button>Mua sản phẩm</button>
-                                    <button>Xem chi tiết</button>
+                                    <button><RouterLink :to="{ name: 'detail', params: { id: el.id }}">Xem chi tiết</RouterLink></button>
                                 </div>
                             </div>
-                            <p class="product-name">{{ el.productName }}</p>
+                            <p class="product-name">{{ el.productName.toLowerCase() }}</p>
                             <div class="price">
-                                <p>{{ el.price }} VND</p>
-                                <p>{{ el.sale_price }} VND</p>
+                                <p>{{Number(el.price.split(" ").join('')).toLocaleString()}} VND</p>
+                                <p>{{Number(el.sale_price.split(" ").join('')).toLocaleString() }} VND</p>
                             </div>
                         </div>
                     </div>
@@ -36,7 +36,7 @@
             </template>
         </carousel>
         <div class="view-all-btn">
-            <button><router-link :to="{ name: 'perfume', params: { id: gender }}">Xem tất cả</router-link></button>
+            <button><router-link :to="{ name: 'product', params: { id: gender }}">Xem tất cả</router-link></button>
         </div>
     </div>
 </template>

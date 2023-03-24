@@ -11,206 +11,70 @@
                         <div class="btn-children">
                             <div class="btn-content">
                                 <button>Mua sản phẩm</button>
-                                <button>Xem chi tiết</button>
+                                <button><RouterLink :to="{ name: 'detail', params: { id: item.id }}">Xem chi tiết</RouterLink></button>
                             </div>
                         </div>
-                        <p class="product-name">{{ item.productName }}</p>
+                        <p class="product-name">{{ item.productName.toLowerCase() }}</p>
                         <div class="price">
-                            <p>{{ item.price }} VND</p>
-                            <p>{{ item.sale_price }} VND</p>
+                            <p>{{Number(item.price.split(" ").join('')).toLocaleString()}} VND</p>
+                            <p>{{Number(item.sale_price.split(" ").join('')).toLocaleString() }} VND</p>
                         </div>
                     </div>
                     
                 </div>
             </div>
             <ul class="product-pagination d-flex flex-row">
-                <li class="page-item"><Link class="page-link" to="#" @click="changePageNumber(page > 0 ? page - 1 : page)" >Trước</Link></li>
-                <li :class="index === page ? 'page-item-active' : 'page-item-children'" v-for="(item, index) in numberPage" :key="index" @click="changePageNumber(index)" >
+                <li class="page-item"><Link class="page-link" to="#" @click="changePage(page > 0 ? page - 1 : page)" >Trước</Link></li>
+                <li :class="index === page ? 'page-item-active' : 'page-item-children'" v-for="(item, index) in numberPage" :key="index" @click="changePage(index)" >
                     <span 
                         class="page-link"
                     >{{ index + 1 }}
                     </span>
                 </li>
-                <li class="page-item"><Link class="page-link" to="#" @click="changePageNumber(page < numberPage - 1 ? page + 1 : page)" >Sau</Link></li>
+                <li class="page-item"><Link class="page-link" to="#" @click="changePage(page < numberPage - 1 ? page + 1 : page)" >Sau</Link></li>
             </ul>
         </div>
     </div>
 </template>
 <script>
-    import { get, ref} from 'firebase/database';
-    import { database } from "../../firebase.js";
+    import { mapActions, mapGetters } from 'vuex';
     export default {
         components: {
         },
         data() {
             return {
-                product: null,
-                isLoading: false,
                 categoryId: "",
-                productShow: null,
-                productList: null,
-                categoryName: "",
-                take:12,
-                page:0,
-                numberPage:null,
             }
         },
         computed: {
-            
+            ...mapGetters([ 'categoryName', 'productList', 'isLoading', 'page', 'numberPage' ])
         },
 
         watch: {
             '$route' () {
                 this.categoryId = this.$route.params.id
-                this.fetchCategoryById();
-                this.fetchDataByCategoryId();
-                this.page = 0;
+                this.getCategoryName(this.categoryId);
+                this.getProduct(this.categoryId);
+                this.changePageZero();
                 window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
             },
             page:function() {
-                this.fetchDataByCategoryId()
+                this.getProduct(this.categoryId)
                 window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
             },
         },  
         
         async mounted() {
             this.categoryId = this.$route.params.id
-            this.page = 0;
-            await this.fetchProductById()
-            await this.fetchCategoryById()
-            await this.fetchDataByCategoryId()
+            this.changePageZero();
+            await this.getCategoryName(this.categoryId)
+            await this.getProduct(this.categoryId)
             window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
         },
         
 
         methods: {
-            async fetchProductById() {
-                this.isLoading = true
-                await get(ref(database, "Product"))
-                .then((snapshot) => {
-                if (snapshot.exists()) {
-                    const response = snapshot.val();
-                    const keys = Object.keys(response);
-                    const list = keys.map(key => {
-                        return {
-                            ...response[key],
-                            key,
-                        }
-                    });
-                    this.isLoading=false;
-                    this.product=list;
-                }
-                }).catch((error) => {
-                    this.isLoading=false
-                    console.error(error);
-                });
-            },
-            fetchCategoryById() {
-                get(ref(database, 'Category')).then((snapshot) => {
-                if (snapshot.exists()) {
-                    const category = Object.values(snapshot.val());
-                    if(category) {
-                        category.forEach(el => {
-                            if(el.id === this.categoryId) {
-                                this.categoryName = el.categoryName
-                            }
-                        })
-                    }
-                }})
-                .catch((error) => {
-                    console.error(error);
-                });
-            },
-            fetchDataByCategoryId() {
-                if (this.categoryId === "1") {
-                    this.productShow = this.product?.filter(el => el.gender === "1");
-                    if(this.page === 0) {
-                        this.productList = this.productShow.slice(0, this.take);
-                        this.numberPage = Math.ceil(this.productShow.length / this.take);
-                    } else {
-                        this.productList = this.productShow.slice(this.page * this.take, this.page * this.take + this.take);
-                    }
-                } else if (this.categoryId === "2") {
-                    this.productShow = this.product?.filter(el => el.gender === "2");
-                    if(this.page === 0) {
-                        this.productList = this.productShow.slice(0, this.take);
-                        this.numberPage = Math.ceil(this.productShow.length / this.take);
-                    } else {
-                        this.productList = this.productShow.slice(this.page * this.take, this.page * this.take + this.take);
-                    }
-                } else if (this.categoryId === "3") {
-                    this.productShow = this.product?.filter(el => {
-                        if (Number(el.price.split(" ").join('')) > 3000000 && el.gender === "1") {
-                            return el;
-                        }
-                    });
-                    if(this.page === 0) {
-                        this.productList = this.productShow.slice(0, this.take);
-                        this.numberPage = Math.ceil(this.productShow.length / this.take);
-                    }  else {
-                        this.productList = this.productShow.slice(this.page * this.take, this.page * this.take + this.take);
-                    }
-                } else if (this.categoryId === "4") {
-                    this.productShow = this.product?.filter(el => {
-                        if (Number(el.price.split(" ").join('')) > 3000000 && el.gender === "2") {
-                            return el;
-                        }
-                    });
-                    if(this.page === 0) {
-                        this.productList = this.productShow.slice(0, this.take);
-                        this.numberPage = Math.ceil(this.productShow.length / this.take);
-                    } else {
-                        this.productList = this.productShow.slice(this.page * this.take, this.page * this.take + this.take);
-                    }
-                } else if (this.categoryId === "5") {
-                    this.productShow = this.product?.filter(el => {
-                        if (Number(el.price.split(" ").join('')) < 1000000 && el.gender === "1") {
-                            return el;
-                        }
-                    });
-                    if(this.page === 0) {
-                        this.productList = this.productShow.slice(0, this.take);
-                        this.numberPage = Math.ceil(this.productShow.length / this.take);
-                    } else {
-                        this.productList = this.productShow.slice(this.page * this.take, this.page * this.take + this.take);
-                    }
-                } else if (this.categoryId === "6") {
-                    this.productShow = this.product?.filter(el => {
-                        if (Number(el.price.split(" ").join('')) < 1000000 && el.gender === "2") {
-                            return el;
-                        }
-                    });
-                    if(this.page === 0) {
-                        this.productList = this.productShow.slice(0, this.take);
-                        this.numberPage = Math.ceil(this.productShow.length / this.take);
-                    } else {
-                        this.productList = this.productShow.slice(this.page * this.take, this.page * this.take + this.take);
-                    }
-                } else if (this.categoryId === "100") {
-                    this.productShow = this.product?.filter(el => {
-                        if (el.gender === "1" || el.gender === "2") {
-                            return el;
-                        }
-                    });
-                    if(this.page === 0) {
-                        this.productList = this.productShow.slice(0, this.take);
-                        this.numberPage = Math.ceil(this.productShow.length / this.take);
-                    } else {
-                        this.productList = this.productShow.slice(this.page * this.take, this.page * this.take + this.take);
-                    }
-                } else {
-                    this.productShow = this.product?.filter(el => el.categoryId === this.categoryId);
-                    if(this.page === 0) {
-                        this.productList = this.productShow.slice(0, this.take);
-                        this.numberPage = Math.ceil(this.productShow.length / this.take);
-                    } else {
-                        this.productList = this.productShow.slice(this.page * this.take, this.page * this.take + this.take);
-                    }
-                }
-            },
-            changePageNumber(pageNumber) {
-                this.page = pageNumber;
-            }
+            ...mapActions([ 'getCategoryName', 'changePage', 'getProduct', 'changePageZero' ]),
         },
        
 

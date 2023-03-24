@@ -28,7 +28,7 @@ export default {
   watch: {
     '$route' () {
       const url = window.location.href;
-      if (url.slice(21) === '/' || url.includes("/perfume/")) {
+      if (url.slice(21) === '/' || url.includes("/product/")) {
         this.isShowTopbar = true;
         this.isShowSidebar = true;
       } else if (url.includes("/signin") || url.includes("/signup") || url.includes("/forgotpassword")) {
@@ -42,7 +42,7 @@ export default {
   },
   created() {
     const url = window.location.href;
-    if (url.slice(21) === '/' || url.includes("/perfume/")) {
+    if (url.slice(21) === '/' || url.includes("/product/")) {
       this.isShowTopbar = true;
       this.isShowSidebar = true;
     } else if (url.includes("/signin") || url.includes("/signup") || url.includes("/forgotpassword")) {
@@ -66,9 +66,10 @@ export default {
   }
   
   .main-container {
-    width: 100%;
+    width: 1280px !important;
     margin-top: 30px;
     margin-bottom: 50px;
+    min-height: 600PX;
   }
 
   .main-info-content{

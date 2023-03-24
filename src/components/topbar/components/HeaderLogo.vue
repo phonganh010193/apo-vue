@@ -40,6 +40,10 @@ export default {
         width: 150px;
     }
 
+    .logo-container{
+        width: 1280px !important;
+    }
+
     .transport p {
         margin: 0;
         padding-left: 10px;

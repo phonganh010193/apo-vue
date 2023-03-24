@@ -13,9 +13,9 @@
                         <div class="sidebar-product-item-content d-flex flex-row"  >
                             <img :src="el.image" class="sidebar-product-image" alt=""/>
                             <div class="sidebar-product-info">
-                                <p class="sidebar-product-name">{{ el.productName }}</p>
-                                <p class="sidebar-price">{{ el.price }} VND</p>
-                                <p class="sidebar-sale-price">{{ el.sale_price }} VND</p>
+                                <p class="sidebar-product-name">{{ el.productName.toLowerCase() }}</p>
+                                <p class="sidebar-price">{{Number(el.price.split(" ").join('')).toLocaleString()}} VND</p>
+                                <p class="sidebar-sale-price">{{Number(el.sale_price.split(" ").join('')).toLocaleString() }} VND</p>
                                 <button>Thêm vào giỏ hàng</button>
                             </div>
                         </div>
@@ -54,6 +54,9 @@ export default {
 }
 </script>
 <style >
+    .sidebar-product-name{
+        text-transform: capitalize
+    }
     .sidebar-show-product {
         margin-top: 40px !important;
     }

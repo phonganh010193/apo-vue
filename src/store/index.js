@@ -2,12 +2,16 @@ import { createStore } from 'vuex';
 import todoModule from './modules/todoModule';
 import home from './modules/homeModule';
 import sidebar from './modules/sidebarModule';
+import product from './modules/productModule';
+import detail from './modules/detail';
 // Create a new store instance.
 const store = createStore({
     modules: {
         todoModule,
         home,
-        sidebar
+        sidebar,
+        product,
+        detail
     },
 
 })
