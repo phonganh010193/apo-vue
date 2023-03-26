@@ -1,12 +1,12 @@
 <template>
-    <div class="home-container d-flex flex-row">
-      <div class="home-content">
-        <HomeSlider />
-        <HomeProduct :list="listMen" :loading="isLoadingMen" :gender="male" />
-        <HomeImage />
-        <HomeProduct :list="listWomen" :loading="isLoadingWomen" :gender="female" />
-      </div>
+  <div class="home-container d-flex flex-row">
+    <div class="home-content">
+      <HomeSlider />
+      <HomeProduct :list="listMen" :loading="isLoadingMen" :gender="male" />
+      <HomeImage />
+      <HomeProduct :list="listWomen" :loading="isLoadingWomen" :gender="female" />
     </div>
+  </div>
 </template>
 <script>
 import HomeSlider from "../Home/components/homeSlider/HomeSlider.vue";
@@ -15,34 +15,40 @@ import HomeImage from "./components/homeImage/HomeImage.vue";
 
 import { mapActions, mapGetters } from "vuex";
 export default {
-  name: 'App',
+  name: "App",
   components: {
     HomeProduct,
     HomeSlider,
-    HomeImage
+    HomeImage,
   },
-  computed: mapGetters([ 'male', 'female', 'listMen', 'listWomen', 'isLoadingMen', 'isLoadingWomen' ]),
+  computed: mapGetters([
+    "male",
+    "female",
+    "listMen",
+    "listWomen",
+    "isLoadingMen",
+    "isLoadingWomen",
+  ]),
 
   async mounted() {
-    await this.getDataProductMale()
-    await this.getDataProductFemale()
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    await this.getDataProductMale();
+    await this.getDataProductFemale();
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   },
 
   methods: {
-    ...mapActions(['getDataProductMale', 'getDataProductFemale'])
-    
-    
-  }
-}
+    ...mapActions(["getDataProductMale", "getDataProductFemale"]),
+  },
+};
 </script>
-<style >
-  .home-container {
-    width: 100% !important;
-  }
-  .home-content {
-    width: 100% !important;
-    margin-left: 30px;
-    overflow: hidden;
-  }
+<style>
+.home-container {
+  width: 100% !important;
+  margin-top: 30px;
+}
+.home-content {
+  width: 100% !important;
+  margin-left: 30px;
+  overflow: hidden;
+}
 </style>

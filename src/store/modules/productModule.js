@@ -71,6 +71,9 @@ const ProductModule = {
         changePageZero({ commit }) {
             commit('CHANGE_PAGE_ZERO')
         },
+        resetProductList({commit}) {
+            commit('RESET_PRODUCT_LIST')
+        }
 
     },
     mutations: {
@@ -178,6 +181,10 @@ const ProductModule = {
                     state.productList = state.productShow.slice(state.page * state.take, state.page * state.take + state.take);
                 }
             }
+        },
+        RESET_PRODUCT_LIST(state) {
+            state.productList = null,
+            state.numberPage = null
         }
 
     }

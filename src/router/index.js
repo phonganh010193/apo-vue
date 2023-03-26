@@ -1,7 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from "../views/Home/HomeView.vue";
 import CartView from "../views/Cart/CartView.vue";
-import SigninView from "../container/singn/SigninView.vue";
+import SigninView from "../container/singin/SigninView.vue";
+import SignupView from "../container/signup/SignupView.vue";
+import ForgotPasswordView from "../container/forgotpassword/ForgotPassword.vue";
 import DetailView from "../views/DetailProduct/DetailProduct.vue";
 const routes = [
 
@@ -25,6 +27,16 @@ const routes = [
     path: '/signin',
     name: 'signin',
     component: () => <SigninView />
+  },
+  {
+    path: '/signup',
+    name: 'signup',
+    component: () => <SignupView />
+  },
+  {
+    path: '/forgotpassword',
+    name: 'forgotpassword',
+    component: () => <ForgotPasswordView />
   },
   {
     path: '/product-detail/:id',

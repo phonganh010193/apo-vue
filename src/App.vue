@@ -67,7 +67,6 @@ export default {
   
   .main-container {
     width: 1280px !important;
-    margin-top: 30px;
     margin-bottom: 50px;
     min-height: 600PX;
   }

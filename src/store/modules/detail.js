@@ -6,13 +6,21 @@ const DetailModule = {
         return {
             detailList: null,
             isLoading: false,
-            imageShow: ""
+            imageShowUi: "",
+            listInfoProductTitle: [
+                {id: 1, title: "Thông tin sản phẩm", active: false},
+                {id: 2, title: "Hướng dẫn mua hàng", active: false },
+                {id: 3, title: "Đánh giá chi tiết", active: false}
+            ],
+            changeKey: null
         }
     },
     getters: {
         detailList: state => state.detailList,
         isLoading: state => state.isLoading,
-        imageShow: state => state.imageShow
+        imageShowUi: state => state.imageShowUi,
+        listInfoProductTitle: state => state.listInfoProductTitle,
+        changeKey: state => state.changeKey
     },
     actions: {
         async getDetailProductById({ commit }, productId) {
@@ -27,7 +35,7 @@ const DetailModule = {
                 commit('ISLOADING_FINISH')
                 console.error(error);
             });
-        }
+        },
     },
     mutations: {
         ISLOADING_START(state) {
@@ -41,13 +49,31 @@ const DetailModule = {
         },
         GET_DETAIL_LIST(state, data) {
             state.detailList = data,
-                state.imageShow = data.image
+            state.imageShowUi = data.image
         },
         CHANGE_IMAGE_SHOW(state, image) {
-            state.imageShow = image
+            state.imageShowUi = image
         },
         DELETE_DETAIL(state) {
-            state.detailList = null
+            state.detailList = null,
+            state.imageShowUi = ""
+        },
+        CHANGE_KEY(state, key) {
+            state.changeKey = key;
+            state.listInfoProductTitle= state.listInfoProductTitle.map((item) => {
+                if(item.id === key) {
+                    return {
+                        ...item,
+                        active: true
+                    }
+                } else {
+                    return {
+                        ...item,
+                        active:false
+                    }
+                }
+
+            })
         }
     }
 }
