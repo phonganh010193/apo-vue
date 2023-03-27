@@ -1,5 +1,5 @@
 <template>
-  <div class="container login-container m-0 p-0">
+  <div class="container login-container m-0 p-0" v-if="isLoading === false">
     <div class="login-heaser">
       <RouterLink to="/">
         <svg
@@ -19,7 +19,24 @@
     </div>
     <div class="form-login">
       <img class="img-login" :src="imageLogin" alt="" />
-      <form class="form-login-input">
+      <form 
+        class="form-login-input" 
+        novalidate="true"
+        @submit="(event) => {
+          event.preventDefault();
+          checkForm();
+
+          createUser({
+            name: name,
+            address: address,
+            phone: phone,
+            email: email,
+            password: password,
+          });
+         
+          
+        }"
+      >
         <div class="form-input-content d-flex flex-row">
           <label for="email">
             <svg
@@ -42,6 +59,11 @@
             v-model="name"
           />
         </div>
+        <div class="validate-info">
+          <p v-if="errorEmail.required && !name" style="color: red; font-size: 13px;">Chưa nhập họ tên!</p>
+          <p style="height: 20px;"></p>
+        </div>
+
         <div class="form-input-content d-flex flex-row">
           <label>
             <svg
@@ -67,6 +89,11 @@
             v-model="address"
           />
         </div>
+        <div class="validate-info">
+          <p v-if="errorEmail.required && !address" style="color: red; font-size: 13px;">Chưa nhập địa chỉ!</p>
+          <p style="height: 20px;"></p>
+        </div>
+
         <div class="form-input-content d-flex flex-row">
           <label>
             <svg
@@ -89,6 +116,11 @@
             v-model="phone"
           />
         </div>
+        <div class="validate-info">
+          <p v-if="errorEmail.required && !phone" style="color: red; font-size: 13px;">Chưa nhập số điện thoại!</p>
+          <p style="height: 20px;"></p>
+        </div>
+
         <div class="form-input-content d-flex flex-row">
           <label>
             <svg
@@ -111,6 +143,12 @@
             v-model="email"
           />
         </div>
+        <div class="validate-info">
+          <p v-if="errorEmail.required && !email" style="color: red; font-size: 13px;">Chưa nhập Email!</p>
+          <p v-if="email && !validEmail(email)" style="color: red; font-size: 13px;">Đây không phải email!</p>
+          <p style="height: 20px;"></p>
+        </div>
+
         <div class="form-input-content d-flex flex-row">
           <label for="password">
             <svg
@@ -130,10 +168,28 @@
             class="input-children"
             type="password"
             id="password"
-            placeholder="Password"
+            placeholder="Mật khẩu"
             v-model="password"
           />
+          <span>
+            <svg v-if="!showHidePW"  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash" viewBox="0 0 16 16" @click="showHidePassword()">
+              <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z"/>
+              <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/>
+              <path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12-.708.708z"/>
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16" @click="showHidePassword()">
+              <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+              <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+            </svg>
+          </span>
         </div>
+        <div class="validate-info">
+          <p v-if="errorEmail.required && !password" style="color: red; font-size: 13px;">Chưa nhập mật khẩu!</p>
+          <p v-if="password && !validPassWord(password)" style="color: red; font-size: 13px;">Mật khẩu tối thiểu tám ký tự, ít nhất một chữ hoa, một chữ thường, một số và một ký tự đặc biệt</p>
+          <p v-else></p>
+          <p style="height: 20px;"></p>
+        </div>
+
         <div class="form-input-content d-flex flex-row">
           <label for="password">
             <svg
@@ -151,26 +207,33 @@
           </label>
           <input
             class="input-children"
-            placeholder="ConfimPassword"
+            id="confirmpassword"
+            type="password"
+            placeholder="Xác nhận mật khẩu"
             v-model="confirmPassword"
           />
+          <span>
+            <svg v-if="!showHideCFPW"  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash" viewBox="0 0 16 16" @click="showHideConfirmPassword()">
+              <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z"/>
+              <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/>
+              <path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12-.708.708z"/>
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16" @click="showHideConfirmPassword()">
+              <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+              <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+            </svg>
+          </span>
         </div>
+        <div class="validate-info">
+          <p v-if="errorEmail.required && !confirmPassword" style="color: red; font-size: 13px;">Chưa xác nhận mật khẩu!</p>
+          <p v-if="confirmPassword && checkPassword(password, confirmPassword)" style="color: red; font-size: 13px;">Mật khẩu không trùng khớp!</p>
+          <p style="height: 20px;"></p>
+        </div>
+
         <div>
           <button
+            type="submit"
             class="btn-login"
-            @click="
-              (event) => {
-                event.preventDefault();
-                createUser({
-                  name: name,
-                  address: address,
-                  phone: phone,
-                  email: email,
-                  password: password,
-                  roles: 'C',
-                });
-              }
-            "
           >
             Đăng ký
           </button>
@@ -181,6 +244,9 @@
         </div>
       </form>
     </div>
+  </div>
+  <div v-else class="loading-signup">
+    <img :src="'https://upload.wikimedia.org/wikipedia/commons/c/c7/Loading_2.gif?20170503175831'" alt="" />
   </div>
 </template>
 <script>
@@ -197,6 +263,11 @@ export default {
       email: "",
       password: "",
       confirmPassword: "",
+      errorEmail: {
+        required: false,
+      },
+      showHidePW: false,
+      showHideCFPW: false
     };
   },
   created() {
@@ -207,10 +278,62 @@ export default {
   },
   methods: {
     ...mapActions(["createUser"]),
+    checkForm() {
+      if(!this.email || !this.password ||!this.address || !this.phone || !this.name || !this.confirmPassword) {
+        this.errorEmail.required = true;
+        return;
+      } 
+      
+    },
+    validEmail: function (email) {
+      var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      const checkEmail = re.test(email);
+      return checkEmail;
+    },
+    validPassWord: function (password) {
+      var re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      return re.test(password);
+    },
+    showHidePassword() {
+      var x = document.getElementById("password");
+      if (x.type === "password") {
+        x.type = "text";
+        this.showHidePW= !this.showHidePW
+      } else {
+        x.type = "password";
+        this.showHidePW= !this.showHidePW
+      }
+    },
+    showHideConfirmPassword() {
+      var y = document.getElementById("confirmpassword");
+      if (y.type === "password") {
+        y.type = "text";
+        this.showHideCFPW= !this.showHideCFPW
+      } else {
+        y.type = "password";
+        this.showHideCFPW= !this.showHideCFPW
+      }
+    },
+    checkPassword(password, confirmpassword) {
+      if(confirmpassword !== password) {
+        return true;
+      } else {
+        return false
+      }
+
+    }
+    
   },
 };
 </script>
 <style>
+.loading-signup {
+  text-align: center;
+}
+.loading-signup > img {
+  width: 60px;
+  margin-top: 300px;
+}
 .btn-login {
   width: 110px;
   height: 40px;
@@ -244,9 +367,9 @@ export default {
 .form-input-content {
   border: 1px solid rgb(221, 220, 220);
   width: 350px;
-  height: 30px;
+  height: 35px;
   border-radius: 5px;
-  justify-content: space-around;
+  /* justify-content: space-around; */
   align-items: center;
 }
 
@@ -283,7 +406,7 @@ export default {
   height: 380px;
 }
 
-.form-login-input div {
+/* .form-login-input div {
   margin-bottom: 22px;
-}
+} */
 </style>

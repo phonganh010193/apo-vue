@@ -19,7 +19,14 @@
     </div>
     <div class="form-login">
       <img class="img-login" :src="imageLogin" alt="" />
-      <form class="form-login-input">
+      <form 
+        class="form-login-input"
+        @submit="(event) => {
+          event.preventDefault();
+          checkForm();
+          forgotPassword(email)
+        }"
+      >
         <div class="form-input-content d-flex flex-row">
           <label for="email">
             <svg
@@ -40,11 +47,16 @@
             type="text"
             id="email"
             placeholder="abc@gmail.com"
+            v-model="email"
           />
         </div>
-
+        <div class="validate-info">
+          <p v-if="errorEmail.required && !email" style="color: red; font-size: 13px;">Chưa nhập Email!</p>
+          <p v-if="email && !validEmail(email)" style="color: red; font-size: 13px;">Đây không phải email!</p>
+          <p style="height: 20px;"></p>
+        </div>
         <div>
-          <button class="btn-login">Gửi Email</button>
+          <button class="btn-login" type="submit">Gửi Email</button>
           <span
             >hoặc
             <RouterLink class="forgot-password" to="/signin">Đăng nhập ngay!</RouterLink>
@@ -55,13 +67,31 @@
   </div>
 </template>
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   data() {
     return {
-      imageLogin:
-        "https://theperfume.vn/wp-content/uploads/2021/05/dior-sauvage-edp-1.jpg",
+      imageLogin:"https://theperfume.vn/wp-content/uploads/2021/05/dior-sauvage-edp-1.jpg",
+      email: '',
+      errorEmail: {
+        required: false,
+      },
     };
   },
+  methods: {
+    ...mapActions(['forgotPassword']),
+    checkForm() {
+      // e.preventDefault();
+      if(!this.email || !this.password) {
+        this.errorEmail.required = true;
+      } 
+    },
+    validEmail: function (email) {
+      var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    },
+  }
 };
 </script>
 <style>
@@ -99,9 +129,9 @@ export default {
 .form-input-content {
   border: 1px solid rgb(221, 220, 220);
   width: 350px;
-  height: 30px;
+  height: 35px;
   border-radius: 5px;
-  justify-content: space-around;
+  /* justify-content: space-around; */
   align-items: center;
 }
 
@@ -140,7 +170,7 @@ export default {
   margin-right: 50px;
 }
 
-.form-login-input div {
+/* .form-login-input div {
   margin-bottom: 22px;
-}
+} */
 </style>
