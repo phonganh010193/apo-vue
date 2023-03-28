@@ -3,11 +3,14 @@ import { auth } from '../../firebase';
 import { ref, push, get } from 'firebase/database';
 import { database } from "../../firebase";
 import { router } from '@/router';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 const LoginModule = {
     state() {
         return {
-            isLoading: false,
+            isLoadingSignUp: false,
+            isLoadingSignIn: false,
             user: null,
             token: '',
             userCurrent: null,
@@ -16,7 +19,8 @@ const LoginModule = {
     },
     getters: {
         user: state => state.user,
-        isLoading: state => state.isLoading,
+        isLoadingSignUp: state => state.isLoadingSignUp,
+        isLoadingSignIn: state => state.isLoadingSignIn,
         userCurrent: state => state.userCurrent,
         isShowPopup: state => state.isShowPopup
     },
@@ -38,10 +42,13 @@ const LoginModule = {
                         roles: "C"
                     })
                 }
+                toast.success('Đăng ký thành công!')
+                commit('PUSH_USER', userCreate?.user)
                 router.push('/signin')
                 commit('ISLOADING_SUCCESS')
             } catch (error) {
                 commit('ISLOADING_FINISH')
+                toast.error('Email đăng ký đã tồn tại!')
                 console.log(error)
             }
         },
@@ -50,17 +57,18 @@ const LoginModule = {
             if (!values.email || !values.password) {
                 return;
             }
-            commit('ISLOADING_START');
+            commit('ISLOADING_LOGIN_START');
             try {
                 const userLogin = await signInWithEmailAndPassword(auth, values.email, values.password);
-                commit('ISLOADING_SUCCESS')
+                commit('ISLOADING_LOGIN_SUCCESS');
                 if (userLogin) {
                     localStorage.setItem('token', userLogin?.user?.accessToken);
+
                     router.push('/')
                 }
 
             } catch (error) {
-                commit('ISLOADING_FINISH')
+                commit('ISLOADING_LOGIN_FINISH')
             }
 
         },
@@ -100,8 +108,10 @@ const LoginModule = {
             }
             try {
                 await sendPasswordResetEmail(auth, email)
+                toast.success('Đã gửi email!')
                 commit('')
             } catch (error) {
+                toast.error('Gửi không thành công!')
                 console.log(error);
             }
 
@@ -111,13 +121,25 @@ const LoginModule = {
     },
     mutations: {
         ISLOADING_START(state) {
-            state.isLoading = true;
+            state.isLoadingSignUp = true;
         },
         ISLOADING_SUCCESS(state) {
-            state.isLoading = false;
+            state.isLoadingSignUp = false;
         },
         ISLOADING_FINISH(state) {
-            state.isLoading = false;
+            state.isLoadingSignUp = false;
+        },
+        ISLOADING_LOGIN_START(state) {
+            state.isLoadingSignIn = true;
+        },
+        ISLOADING_LOGIN_SUCCESS(state) {
+            state.isLoadingSignIn = false;
+        },
+        ISLOADING_LOGIN_FINISH(state) {
+            state.isLoadingSignIn = false;
+        },
+        PUSH_USER(state, user) {
+            state.user = user
         },
         RESET_INFO(state) {
             state.isLoading = false

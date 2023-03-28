@@ -71,7 +71,7 @@ const ProductModule = {
         changePageZero({ commit }) {
             commit('CHANGE_PAGE_ZERO')
         },
-        resetProductList({commit}) {
+        resetProductList({ commit }) {
             commit('RESET_PRODUCT_LIST')
         }
 
@@ -99,18 +99,18 @@ const ProductModule = {
             if (productList.categoryId === "1") {
                 state.productShow = productList.list?.filter(el => el.gender === "1");
                 if (state.page === 0) {
-                    state.productList = state.productShow.slice(0, state.take);
+                    state.productList = state.productShow?.slice(0, state.take);
                     state.numberPage = Math.ceil(state.productShow.length / state.take);
                 } else {
-                    state.productList = state.productShow.slice(state.page * state.take, state.page * state.take + state.take);
+                    state.productList = state.productShow?.slice(state.page * state.take, state.page * state.take + state.take);
                 }
             } else if (productList.categoryId === "2") {
                 state.productShow = productList.list?.filter(el => el.gender === "2");
                 if (state.page === 0) {
-                    state.productList = state.productShow.slice(0, state.take);
+                    state.productList = state.productShow?.slice(0, state.take);
                     state.numberPage = Math.ceil(state.productShow.length / state.take);
                 } else {
-                    state.productList = state.productShow.slice(state.page * state.take, state.page * state.take + state.take);
+                    state.productList = state.productShow?.slice(state.page * state.take, state.page * state.take + state.take);
                 }
             } else if (productList.categoryId === "3") {
                 state.productShow = productList.list?.filter(el => {
@@ -119,10 +119,10 @@ const ProductModule = {
                     }
                 });
                 if (state.page === 0) {
-                    state.productList = state.productShow.slice(0, state.take);
+                    state.productList = state.productShow?.slice(0, state.take);
                     state.numberPage = Math.ceil(state.productShow.length / state.take);
                 } else {
-                    state.productList = state.productShow.slice(state.page * state.take, state.page * state.take + state.take);
+                    state.productList = state.productShow?.slice(state.page * state.take, state.page * state.take + state.take);
                 }
             } else if (productList.categoryId === "4") {
                 state.productShow = productList.list?.filter(el => {
@@ -131,10 +131,10 @@ const ProductModule = {
                     }
                 });
                 if (state.page === 0) {
-                    state.productList = state.productShow.slice(0, state.take);
-                    state.numberPage = Math.ceil(state.productShow.length / state.take);
+                    state.productList = state.productShow?.slice(0, state.take);
+                    state.numberPage = Math.ceil(state.productShow?.length / state.take);
                 } else {
-                    state.productList = state.productShow.slice(state.page * state.take, state.page * state.take + state.take);
+                    state.productList = state.productShow?.slice(state.page * state.take, state.page * state.take + state.take);
                 }
             } else if (productList.categoryId === "5") {
                 state.productShow = productList.list?.filter(el => {
@@ -143,10 +143,10 @@ const ProductModule = {
                     }
                 });
                 if (state.page === 0) {
-                    state.productList = state.productShow.slice(0, state.take);
-                    state.numberPage = Math.ceil(state.productShow.length / state.take);
+                    state.productList = state.productShow?.slice(0, state.take);
+                    state.numberPage = Math.ceil(state.productShow?.length / state.take);
                 } else {
-                    state.productList = state.productShow.slice(state.page * state.take, state.page * state.take + state.take);
+                    state.productList = state.productShow?.slice(state.page * state.take, state.page * state.take + state.take);
                 }
             } else if (productList.categoryId === "6") {
                 state.productShow = productList.list?.filter(el => {
@@ -155,10 +155,10 @@ const ProductModule = {
                     }
                 });
                 if (state.page === 0) {
-                    state.productList = state.productShow.slice(0, state.take);
-                    state.numberPage = Math.ceil(state.productShow.length / state.take);
+                    state.productList = state.productShow?.slice(0, state.take);
+                    state.numberPage = Math.ceil(state.productShow?.length / state.take);
                 } else {
-                    state.productList = state.productShow.slice(state.page * state.take, state.page * state.take + state.take);
+                    state.productList = state.productShow?.slice(state.page * state.take, state.page * state.take + state.take);
                 }
             } else if (productList.categoryId === "100") {
                 state.productShow = productList.list?.filter(el => {
@@ -167,24 +167,24 @@ const ProductModule = {
                     }
                 });
                 if (state.page === 0) {
-                    state.productList = state.productShow.slice(0, state.take);
-                    state.numberPage = Math.ceil(state.productShow.length / state.take);
+                    state.productList = state.productShow?.slice(0, state.take);
+                    state.numberPage = Math.ceil(state.productShow?.length / state.take);
                 } else {
-                    state.productList = state.productShow.slice(state.page * state.take, state.page * state.take + state.take);
+                    state.productList = state.productShow?.slice(state.page * state.take, state.page * state.take + state.take);
                 }
             } else {
                 state.productShow = productList.list?.filter(el => el.categoryId === productList.categoryId);
                 if (state.page === 0) {
-                    state.productList = state.productShow.slice(0, state.take);
-                    state.numberPage = Math.ceil(state.productShow.length / state.take);
+                    state.productList = state.productShow?.slice(0, state.take);
+                    state.numberPage = Math.ceil(state.productShow?.length / state.take);
                 } else {
-                    state.productList = state.productShow.slice(state.page * state.take, state.page * state.take + state.take);
+                    state.productList = state.productShow?.slice(state.page * state.take, state.page * state.take + state.take);
                 }
             }
         },
         RESET_PRODUCT_LIST(state) {
             state.productList = null,
-            state.numberPage = null
+                state.numberPage = null
         }
 
     }

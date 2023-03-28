@@ -1,5 +1,5 @@
 <template>
-  <div class="container login-container m-0 p-0" v-if="!isLoading">
+  <div class="container login-container m-0 p-0" v-if="!isLoadingSignIn">
     <div class="login-heaser">
       <RouterLink to="/">
         <svg
@@ -138,11 +138,12 @@ export default {
   created() {
     if(this.user) {
       console.log('user', this.user)
-      // router.push('/')
+      this.email = this.user.email
+      
     }
   },
   computed: {
-    ...mapGetters(['user', 'isLoading'])
+    ...mapGetters(['user', 'isLoadingSignIn'])
   },
   methods: {
     ...mapActions(['Login']),
