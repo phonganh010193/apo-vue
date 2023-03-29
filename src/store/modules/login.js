@@ -149,6 +149,9 @@ const LoginModule = {
         },
         ISSHOW_POUP(state) {
             state.isShowPopup = !state.isShowPopup
+        },
+        ISHIDE_POPUP(state) {
+            state.isShowPopup = false
         }
 
     }

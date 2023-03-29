@@ -5,6 +5,7 @@ import sidebar from './modules/sidebarModule';
 import product from './modules/productModule';
 import detail from './modules/detail';
 import login from './modules/login';
+import cart from './modules/cart';
 // Create a new store instance.
 const store = createStore({
     modules: {
@@ -13,7 +14,8 @@ const store = createStore({
         sidebar,
         product,
         detail,
-        login
+        login,
+        cart
     },
 
 })

@@ -47,15 +47,14 @@ export default {
     } else {
       localStorage.removeItem('token')
     }
-  });
-    
+    });
   },
   computed: {
     ...mapGetters(['userCurrent', 'isShowPopup'])
   },
   methods: {
     ...mapActions(['getUser', 'fetchSignOut']),
-    ...mapMutations(['ISSHOW_POUP'])
+    ...mapMutations(['ISSHOW_POUP', 'ISHIDE_POPUP'])
   }
 };
 </script>

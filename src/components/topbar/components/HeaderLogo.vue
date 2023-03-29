@@ -18,14 +18,31 @@
                 </div>
                 <div className="info-cart">
                     <p><RouterLink to="/cart">Giỏ hàng</RouterLink></p>
-                    <p><span style="color: red;">(2)</span> sản phẩm</p>
+                    <p><span style="color: red;">{{ listCart?.length? listCart?.length : 0 }}</span> sản phẩm</p>
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script>
+import { auth } from '../../../firebase';
+import { onAuthStateChanged } from '@firebase/auth';
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
+    created() {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                this.getListCart(user);
+            } 
+        });
+    },
+    computed: {
+        ...mapGetters(['listCart'])
+    },
+    methods: {
+        ...mapActions(['getListCart'])
+    },
     
 }
 </script>

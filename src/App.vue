@@ -1,17 +1,20 @@
 <template>
-  <TopBar v-if="isShowTopbar" />
-  <div class="main-container container d-flex flex-row p-0">
-    <SideBar v-if="isShowSidebar"/>
-    <div :class="isShowSidebar && isShowTopbar ?'main-info' : 'main-info-content'">
-      <RouterView />
+  <div class="container-fluid m-0 p-0">
+    <TopBar v-if="isShowTopbar" />
+    <div class="main-container container d-flex flex-row p-0">
+      <SideBar v-if="isShowSidebar"/>
+      <div :class="isShowSidebar && isShowTopbar ?'main-info' : 'main-info-content'">
+        <RouterView />
+      </div>
     </div>
+    <Footer />
   </div>
-  <Footer />
 </template>
 <script>
 import TopBar from './components/topbar/TopBar.vue';
 import SideBar from './components/sidebar/SideBar.vue';
 import Footer from './components/footer/FooTer.vue';
+import { mapMutations } from 'vuex';
 export default {
   components: {
       TopBar,
@@ -52,7 +55,10 @@ export default {
       this.isShowTopbar = true;
       this.isShowSidebar = false;
     }
-  }
+  },
+  methods: {
+    ...mapMutations('ISHIDE_POPUP')
+  },
   
 
   
