@@ -18,7 +18,7 @@
                 </div>
                 <div className="info-cart">
                     <p><RouterLink to="/cart">Giỏ hàng</RouterLink></p>
-                    <p><span style="color: red;">{{ listCart?.length? listCart?.length : 0 }}</span> sản phẩm</p>
+                    <p><span style="color: red;">({{ listCart?.length ? listCart?.length : 0 }})</span> sản phẩm</p>
                 </div>
             </div>
         </div>

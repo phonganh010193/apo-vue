@@ -17,7 +17,7 @@
             <img :src="item.image" class="product-image" alt="" />
             <div class="btn-children">
               <div class="btn-content">
-                <button>Mua sản phẩm</button>
+                <button >Mua sản phẩm</button>
                 <button>
                   <RouterLink :to="{ name: 'detail', params: { id: item.id } }"
                     >Xem chi tiết</RouterLink
